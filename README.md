@@ -88,10 +88,45 @@ apply hard age or income floors rather than risk-based scores. A tool like FairL
 onto that setting — the audit question ("does my scorecard quietly reject young applicants?") is the
 same even though the underlying data is 1990s German. (General context; no proprietary data used.)
 
+## Follow-up study: the same audit on 2020s US data (LendingClub)
+
+The German audit's most surprising finding was fragility: parity-by-thresholds did not survive a
+validation→test transfer at n=200. Was that the market, or just the sample size? We re-ran the
+**identical protocol** on LendingClub accepted loans (2007–2018Q4, 396,030 rows —
+[`fairlens-lendingclub.ipynb`](notebooks/fairlens-lendingclub.ipynb), executed). Two things change
+and are stated up front: LendingClub applications contain **no protected attributes** (the audit
+shifts to a thin-file dimension that is on the application — employment length, early-career ≤2y or
+unreported vs established ≥3y), and the cost ratio is **estimated from the data** (median charge-off
+loss vs median forgone interest ≈ **2.6:1**) instead of taken from a document.
+
+![Germany vs US comparison](assets/fig_compare.png)
+
+| headline | 1994 Germany (n=1,000) | 2020 US (n=396,030) |
+|---|---|---|
+| approval gap (thin-file vs established) | **+27.0 pp** (CI [+10, +44]) | **+0.9 pp** (CI [+0.7, +1.1]) |
+| parity policy's gap on test | +23.2 pp — **does not transfer** | +0.1 pp — **transfers** |
+| fair policy's cost vs default | 112 vs 165 (−32%) | 35,052 vs 38,979 (−10%) |
+| fair policy's recall vs default | 47/60 vs 31/60 | 5,954/15,534 vs 668/15,534 |
+| model AUC | 0.79 | 0.68 — LC default is much harder to predict |
+
+**Three findings travel, one does not.** (1) In *both* markets the validation-selected fair policy is
+**cheaper** than the default (−32% and −10%) — the default 0.5 threshold approves far too many bad
+risks, and accuracy alone hides this. (2) In both markets, disparities concentrate in the error
+dimension once approval is nearly universal: LendingClub approves ~98% of both groups at 0.5, and the
+actionable differences live in recall (38.3% vs 4.3% under the parity policy) and error rates
+(20.9% early-career vs 18.9%). (3) What does **not** travel: the German disparity itself — the
+thin-file gap on LendingClub is +0.9 pp with a tight CI, an order of magnitude smaller. And the German
+fragility was a **small-sample phenomenon**: at ~22k early-career test rows the same protocol produces
+parity policies that transfer cleanly (test gap +0.1 pp). Sample size, not market, decided whether
+threshold engineering was stable.
+
+Details and full numbers: `results/results_us.json`; charts `assets/fig_us_*.png` and
+`assets/fig_compare.png`; repro via `scripts/fetch_lendingclub.py` + `scripts/run_analysis_us.py`.
+
 ## What we'd do next
 
 1. Equalized-odds and calibration-by-group audits on larger data (parity at n=30/split is fragile).
-2. Re-run on a modern dataset (e.g., LendingClub) to test whether the proxy findings transfer.
+2. ~~Re-run on a modern dataset~~ Done — see the follow-up study above; next would be LendingClub rejected-applications data for a true admission audit.
 3. User-test the dashboard with real credit-risk officers, including the compliance workflow above.
 
 ## Sources
