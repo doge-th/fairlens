@@ -1,0 +1,9 @@
+# FairLens — pinned environment (Python 3.9)
+pandas==2.3.3
+scikit-learn==1.6.1
+matplotlib==3.9.4
+numpy==2.0.2
+ucimlrepo==0.0.7
+nbformat==5.10.4
+nbclient==0.10.2
+ipykernel>=6.29

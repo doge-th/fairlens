@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: 794px 1123px; margin: 0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --navy:#0B1F3A; --navy2:#12294d; --cyan:#22D3EE; --cyan-d:#0E9FB8; --amber:#F59E0B;
+    --ink:#0F172A; --grey:#64748B; --line:#E2E8F0;
+  }
+  html,body{margin:0;padding:0;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+  .page{width:794px;height:1123px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:#fff}
+  .head{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 62%,#0e3a5c 100%);color:#fff;padding:20px 30px 16px;border-bottom:4px solid var(--cyan)}
+  .brandrow{display:flex;align-items:baseline;gap:12px}
+  h1{font-size:25px;letter-spacing:-.4px;font-weight:800}
+  h1 .lens{color:var(--cyan)}
+  .meta{font-size:11px;color:#B9C7DA}
+  .sub{font-size:11.5px;color:#D7E1EE;margin-top:5px;line-height:1.45;max-width:730px}
+  .chip{display:inline-block;margin-top:7px;font-size:9.8px;color:#FFD9A8;border:1px solid rgba(245,158,11,.5);padding:2px 9px;border-radius:999px;background:rgba(245,158,11,.13)}
+  .body{flex:1;display:grid;grid-template-columns:352px 1fr;gap:0;padding:10px 24px 0;min-height:0;overflow:hidden}
+  .colL{padding-right:16px}
+  .colR{padding-left:18px;border-left:1px solid var(--line)}
+  h2{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--cyan-d);margin:10px 0 4px;font-weight:800}
+  h2:first-child{margin-top:2px}
+  p,li{font-size:10.7px;line-height:1.46;color:#1E293B}
+  p+p{margin-top:5px}
+  b{color:var(--navy)}
+  ol{padding-left:15px}
+  ol li{margin-bottom:3px}
+  .num{font-weight:800;color:var(--navy)}
+  table{width:100%;border-collapse:collapse;font-size:10.4px;margin-top:4px}
+  th{font-size:9px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:4px 6px;border-bottom:1.5px solid var(--line)}
+  td{padding:4px 6px;border-bottom:1px solid var(--line)}
+  td.num{font-weight:700}
+  .win{color:var(--cyan-d);font-weight:800}
+  figure{margin:7px 0 2px}
+  figure img{width:100%;display:block;border:1px solid var(--line);border-radius:6px;max-height:210px;object-fit:contain}
+  figcaption{font-size:9.2px;color:var(--grey);margin-top:3px;line-height:1.4}
+  .fail{font-size:10.6px;line-height:1.5;color:#1E293B;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:7px 9px;margin-top:6px}
+  .foot{background:#F1F5F9;border-top:1px solid var(--line);padding:9px 30px;font-size:9px;color:var(--grey);line-height:1.5}
+  .foot b{color:var(--navy)}
+  .kpiband{display:flex;gap:10px;padding:10px 24px 12px}
+  .kpi{flex:1;background:#F8FAFC;border:1px solid var(--line);border-radius:9px;padding:9px 12px}
+  .kpi .k{font-size:8.8px;color:var(--grey);text-transform:uppercase;letter-spacing:.07em}
+  .kpi .v{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
+  .kpi .v span{font-size:12px;color:var(--cyan-d)}
+  .kpi .n{font-size:8.6px;color:var(--grey);margin-top:1px}
+  .repro{font-size:10.2px;line-height:1.55;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:6px;padding:7px 9px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <div class="brandrow">
+      <h1>Fair<span class="lens">Lens</span></h1>
+      <span class="meta">a fairness audit of a loan approval model · Track: AI + Finance · Team: Hao Tan</span>
+    </div>
+    <p class="sub">We audit a credit model on the Statlog German Credit dataset (1,000 applicants, UCI id=144), map every
+    per-group threshold policy on one honest chart priced as documented (a defaulted approval costs <b style="color:#fff">5×</b>
+    a blocked good one), and report what survives a validation→test transfer — including what does not.</p>
+    <span class="chip">This project is a prototype and is not financial advice</span>
+  </div>
+
+  <div class="body">
+    <div class="colL">
+      <h2>The problem</h2>
+      <p>Software increasingly decides who gets a loan, often without explanation. A model can quietly approve
+      <span class="num">80%</span> of applicants aged 25+ while approving only <span class="num">53%</span> of those under 25 —
+      and everyone involved may believe it is neutral. Small lenders lack the tools to ask <i>why</i>.</p>
+
+      <h2>What we built</h2>
+      <p><b>Input:</b> an applicant's 20 attributes. <b>Output:</b> an approval decision plus an interactive
+      <b>fairness dashboard</b> — drag per-group thresholds and watch the gap and total cost recompute live on the 200 held-out
+      applicants. An <b>audit sandbox, not a deployment rule</b>: group-dependent thresholds would be disparate treatment in many
+      jurisdictions (e.g., ECOA).</p>
+
+      <h2>What we added <span style="color:var(--grey);text-transform:none;letter-spacing:0;font-weight:600">(beyond the brief's 4.2.3 steps)</span></h2>
+      <ol>
+        <li><b>A tested second dimension — with a negative result.</b> Sex reaches the model via the personal-status column;
+        we dropped it, retrained, re-audited with a bootstrap CI: the gap collapses to <span class="num">+3.0 pp (CI [−9.0, +15.7])</span>
+        — the signal does not survive, and we report that instead of a headline.</li>
+        <li><b>Quantified proxy evidence.</b> Removing age and retraining leaves the gap at <span class="num">+24.4 pp</span> (vs +27.0):
+        "fairness through unawareness" fails (Kamiran &amp; Calders 2009). Employment history alone carries <span class="num">16%</span> of
+        age's variance (η²).</li>
+        <li><b>The fairness–cost map — validation-selected, test-stressed.</b> 4,225 per-group policies on a validation split
+        (non-degeneracy floor: both groups keep ≥40% approval); three landmark policies reported once on test. One transfers,
+        one does not — see right.</li>
+      </ol>
+
+      <h2>How it works</h2>
+      <p><b>Data:</b> 1,000 × 20 decoded via the official UCI table; 700 good / 300 bad; stratified <b>600/200/200
+      train/val/test</b> (no dates — noted honestly), seed 42; policies selected on validation, reported once on test.<br>
+      <b>Model:</b> logistic regression &amp; random forest; 5-fold CV AUC <span class="num">0.767 ± 0.028</span>.
+      Re-runs from the executed notebook + one script + pinned <b>requirements.txt</b>.</p>
+
+      <h2>How lending works in our country</h2>
+      <p style="font-size:10.4px">In China, young applicants often have exactly the thin files this audit worries about — thinner
+      bureau coverage for under-25s, hard age floors at many online lenders. The audit question is identical even if the data is
+      1990s German. <i>(General context; no proprietary data.)</i></p>
+
+      <h2>Reproduce it</h2>
+      <div class="repro">
+      <b>notebooks/fairlens-analysis.ipynb</b> — executed, outputs included · <b>scripts/fetch_data.py</b> → <b>run_analysis.py</b> rebuild everything ·
+      <b>dashboard/index.html</b> interactive sandbox · <b>results/results.json</b> — single source of truth.
+      </div>
+    </div>
+
+    <div class="colR">
+      <h2>Results — baseline vs model (held-out test, n=200)</h2>
+      <table>
+        <tr><th></th><th>accuracy</th><th>bad caught/60</th><th>good blocked</th><th>AUC</th></tr>
+        <tr><td>Approve everyone (baseline)</td><td class="num">70.0%</td><td class="num">0</td><td class="num">0</td><td class="num">—</td></tr>
+        <tr><td><b>Logistic regression @0.5</b></td><td class="num win">75.5%</td><td class="num win">31</td><td class="num">20</td><td class="num win">0.792</td></tr>
+        <tr><td>Random forest @0.5</td><td class="num">74.5%</td><td class="num">20</td><td class="num">11</td><td class="num">0.775</td></tr>
+      </table>
+
+      <h2>The gap — and its honest context</h2>
+      <figure><img src="../assets/fig2_gap.png" alt="approval gap by age group"><figcaption>Approval rates by age group at the default
+      threshold: <b>+27.0 pp</b> (bootstrap CI [+10.0, +44.5] — wide is honest at ~38 young applicants per split). Dashed line: each
+      group's true bad-risk rate — part of the gap is real risk. The model also errs most where the audit points: error rate
+      <b>31.6% on under-25s vs 22.8%</b> on others.</figcaption></figure>
+
+      <h2>Every policy, priced — and the transfer test</h2>
+      <figure><img src="../assets/fig4_frontier.png" alt="fairness cost map"><figcaption>Thresholds selected on the validation split;
+      markers carry <b>test</b> outcomes. The equal-approval policy's cost (112 vs 165) and recall (47/60 vs 31/60) <b>do transfer</b>
+      (DM-weighted: −40%), but its near-zero validation gap does not: test gap <b>+23.2 pp</b>. Equal bad-risk-approval transfers
+      worse (+48.4 pp). Even the default policy swings (+4.0 pp val → +27.0 pp test): point estimates move with the split — the CI
+      is the honest summary.</figcaption></figure>
+
+      <div class="fail"><b>Where it fails.</b> 3 of 5 shown errors are approved bad risks — the worst: a 51-year-old with clean
+      credit history, P(bad)=0.06 → approved → defaulted; none of the five is under-25 — the gap lives in approvals, not only
+      errors. <b>Next:</b> equalized-odds audits on larger data; re-test on LendingClub.</div>
+    </div>
+  </div>
+
+  <div class="kpiband">
+    <div class="kpi"><div class="k">model accuracy</div><div class="v">75.5% <span>vs 70.0% baseline</span></div><div class="n">bad risks caught: 31/60 vs 0/60</div></div>
+    <div class="kpi"><div class="k">approval gap</div><div class="v">+27pp</div><div class="n">95% CI [+10, +44] · honest width</div></div>
+    <div class="kpi"><div class="k">fair policy, test outcome</div><div class="v">cost 112 <span>vs 165</span></div><div class="n">recall 47/60 vs 31/60 — but gap does not transfer</div></div>
+    <div class="kpi"><div class="k">metric choice</div><div class="v">flips</div><div class="n">accuracy: worse · cost &amp; recall: better</div></div>
+  </div>
+
+  <div class="foot">
+    <b>Sources</b> — Data: <b>Statlog German Credit</b>, UCI ML Repository (id=144), loaded via ucimlrepo · Fairness background: Kamiran &amp; Calders (2009); Hardt, Price &amp; Srebro (2016) ·
+    Tooling: scikit-learn, pandas, matplotlib (pinned in requirements.txt) · Brief: Veritas AI International High School Hackathon 2026, Project Briefs §4.2.3 ·
+    AI tools: <b>ZCode</b> (AI coding assistant) wrote and debugged the analysis under the team's direction; every number reproduces from
+    <b>notebooks/fairlens-analysis.ipynb</b> · Interactive demo: <b>dashboard/index.html</b> · Contact: 3506004191@qq.com
+  </div>
+</div>
+</body>
+</html>
